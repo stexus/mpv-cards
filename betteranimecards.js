@@ -31,10 +31,12 @@ if (!String.prototype.format) {
   };
 }
 ffmpeg.prefix = ['run', 'ffmpeg', '-hide_banner', '-nostdin', '-y']
+//todo: make this asyn so picture can be resized by mogrify
 ffmpeg.execute = function(args) {
   //debug
   mp.msg.warn(args)
   if (args.length > 0) {
+    //debug
     mp.msg.warn('running')
     var command = ffmpeg.prefix.concat(args);
     //debug
@@ -83,12 +85,18 @@ ffmpeg.screenshot = function(ss, filename) {
         '-lossless', '0',
         '-compression_level', '6',
         '-qscale:v', config.screenshot_quality.toString(),
-        '-vf', String.format('scale={0}:{1}', config.screenshot_width, config.screenshot.height),
+        '-vf', 'scale=-2:520',//String.format('scale={0}:{1}', config.screenshot_width, config.screenshot.height),
         '-vframes', '1',
          screenshot_path
   ])
 }
+
+function sub2srs() {
+
+}
 mp.msg.warn('hello world');
+
+
 
 
 
