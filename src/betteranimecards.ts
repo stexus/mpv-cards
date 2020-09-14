@@ -32,6 +32,8 @@ if (!String.prototype.format) {
 }
 ffmpeg.prefix = ['run', 'ffmpeg', '-hide_banner', '-nostdin', '-y']
 //todo: make this asyn so picture can be resized by mogrify
+
+
 ffmpeg.execute = function(args) {
   //debug
   mp.msg.warn(args)
