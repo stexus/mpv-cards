@@ -15,22 +15,65 @@ var ankiconnect = {}
 
 var curl = 'curl';
 //todo: utility functions
-
+//
+//
+//source https://stackoverflow.com/a/4673436
+//string formatting polyfill
+if (!String.prototype.format) {
+  String.prototype.format = function() {
+    var args = arguments;
+    return this.replace(/{(\d+)}/g, function(match, number) { 
+      return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+      ;
+    });
+  };
+}
 ffmpeg.prefix = ['run', 'ffmpeg', '-hide_banner', '-nostdin', '-y']
 ffmpeg.execute = function(args) {
+  //debug
   mp.msg.warn(args)
   if (args.length > 0) {
     mp.msg.warn('running')
     var command = ffmpeg.prefix.concat(args);
+    //debug
     mp.msg.warn(command)
     mp.commandv.apply(null, command);
   }
 }
 
+ffmpeg.cutaudio = function(start, end, filename) { 
+  var video_path = mp.get_property('path');
+  //debug
+  filename = 'changetotemp.ogg'
+  start = 598
+  end = 600
+  //
+  var clip_path = config.media_collection_dir.concat(filename);
+  ffmpeg.execute([
+    '-vn',
+    '-ss', start.toString(),
+    '-to', end.toString(),
+    '-i', video_path,
+    '-map_metadata', '-1',
+    '-map', '0:1', //todo: get audio track dynamically (probably not necessary but we'll see)
+    '-ac', '1',
+    '-codec:a', 'libopus',
+    '-vbr', 'on',
+    '-compression_level', '10',
+    '-application', 'voip',
+    '-b:a', '20k', //todo: allow config
+    clip_path
+  ])
+
+}
 ffmpeg.screenshot = function(ss, filename) {
   var video_path = mp.get_property('path'); 
-  filename = 'debug.webp'
+  //debug
+  filename = 'changetotemp.webp'
   ss = 600
+  //
   var screenshot_path = config.media_collection_dir.concat(filename);
   ffmpeg.execute([
         '-an',
@@ -47,20 +90,8 @@ ffmpeg.screenshot = function(ss, filename) {
 }
 mp.msg.warn('hello world');
 
-//source https://stackoverflow.com/a/4673436
-//string formatting polyfill
-if (!String.prototype.format) {
-  String.prototype.format = function() {
-    var args = arguments;
-    return this.replace(/{(\d+)}/g, function(match, number) { 
-      return typeof args[number] != 'undefined'
-        ? args[number]
-        : match
-      ;
-    });
-  };
-}
+
 
 
 //mpv keybindings; todo: better keybinds
-mp.add_key_binding('g', 'betteranimecards', ffmpeg.screenshot);
+mp.add_key_binding('g', 'betteranimecards', ffmpeg.cutaudio);
