@@ -4,7 +4,7 @@
   "description": "Mux of mpvacious and mpv-nihongo/LaT in TS with an attempt at adding a particular feature not yet fully decided yet.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/stexus/betteranimecards/issues"
   },
-  "homepage": "https://github.com/stexus/betteranimecards#readme"
+  "homepage": "https://github.com/stexus/betteranimecards#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.14",
+    "jest": "^26.4.2",
+    "ts-jest": "^26.3.0",
+    "typescript": "^4.0.3"
+  }
 }
