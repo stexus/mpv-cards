@@ -1,8 +1,6 @@
-# betteranimecards
+# mpv-cards
 
-Mux of mpvacious and mpv-nihongo/LaT in TS with an attempt at adding a particular feature not yet fully decided yet.
+Mux of mpvacious and mpv-nihongo/LaT in Typescript with particular features I want
 
 todo:
-async ffmpeg exec to allow for mogrify resizing
-
-possibly have dynamic subtitle adding to refrain from mpv skipping
+consider implementing Anacreon's subtitle method to get multiple lines without using mpv skip
