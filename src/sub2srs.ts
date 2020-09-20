@@ -4,14 +4,5 @@ export interface CardData {
   audio: string;
 }
 
-export class Sub2SRS {
-  let sentence: string;
-  let picture: string;
-  let audio: string;
-  constructor(data: CardData) {
-    sentence = data.sentence;
-    picture = data.picture;
-    audio = data.audio;
-  }
-}
+
 
