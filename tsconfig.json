@@ -29,8 +29,5 @@
     "noFallthroughCasesInSwitch": true
   },
   "exclude": ["node_modules"],
-  "include": [
-    "./typings/**/*.d.ts",
-    "./src/**/*.ts"
-  ]
+  "include": ["./typings/**/*.d.ts", "./src/**/*.ts", "./tests/**/*.ts"]
 }

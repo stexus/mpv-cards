@@ -1,13 +1,13 @@
 var config = {
   audio_threshold: 0.25,
-  image_width: 520,// -2 for auto width
+  image_width: 520,// negative num for auto width
   image_height: 520,
   image_delay_percent: 0.08,
   screenshot_quality: 70, //0 - 100, 100 is best
   deck_name: 'Manual Mine',
   note_type: 'Audio Cards',
   tag_name: 'animecards',
-  media_collection_dir: '/home/massimo/debugging/'//'/home/massimo/.local/share/Anki2/User 1/collection.media',
+  media_collection_dir: process.env.HOME + '/.local/share/Anki2/User 1/collection.media'
 }
 
 var ffmpeg = {}
@@ -19,20 +19,7 @@ var curl = 'curl';
 //
 //source https://stackoverflow.com/a/4673436
 //string formatting polyfill
-if (!String.prototype.format) {
-  String.prototype.format = function() {
-    var args = arguments;
-    return this.replace(/{(\d+)}/g, function(match, number) { 
-      return typeof args[number] != 'undefined'
-        ? args[number]
-        : match
-      ;
-    });
-  };
-}
 ffmpeg.prefix = ['run', 'ffmpeg', '-hide_banner', '-nostdin', '-y']
-//todo: make this asyn so picture can be resized by mogrify
-
 
 ffmpeg.execute = function(args) {
   //debug
