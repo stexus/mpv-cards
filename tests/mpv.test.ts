@@ -4,11 +4,9 @@
 //todo: add status type in .d.ts file
 const client = require('node-mpv');
 
-
-test('home variable is correct', () => {
-  expect(process.env.HOME).toBe('/home/massimo');
-})
-const player = new client();
+const player = new client({
+  'audio_only': false
+});
 const init = async () => {
     await player.start();
     await player.load('./tests/fixtures/shokugeki.mkv');
@@ -19,19 +17,28 @@ describe('MPV grabbing information', () => {
     await init();
     const name: string = await player.getFilename('stripped');
     expect(name).toBe('shokugeki.mkv');
-    player.on('status', async (status: any) => {
-      console.log(status);
-    })
-    await player.seek(5);
-    await player.pause();
-    console.log(await player.getProperty('sub-text'));
-    console.log(await player.getProperty('sub-start'));
-    console.log(await player.getProperty('sub-end'));
 
     })
   it('gets correct picture timestamp', async () => {
-    const name: string = await player.getFilename('stripped');
-    expect(name).toBe('shokugeki.mkv');
+    await player.seek(5);
+    await player.pause();
+    const subs: string = await player.getProperty('sub-text');
+    const ss: string = await player.getProperty('sub-start');
+    const to: string = await player.getProperty('sub-end');
+    await player.quit();
+    expect(subs.replace(/\s/g, '')).toBe('（葉山(はやま)アキラ）ケンカふっかけるだろうとは思ってたけどよぉ')
+    expect(ss).toBe(4.859);
+    expect(to).toBe(7.99);
+
+  })
+})
+
+describe('MPV activating plugins', () => {
+  it('sends a keypress', async() => {
+    await init();
+    await player.command('keypress', ['b']);
+    await player.pause();
+    await player.quit();
 
   })
 })
