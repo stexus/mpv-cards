@@ -3,14 +3,14 @@ export interface CardData {
   picture: string;
   audio: string;
 }
-interface SubMap {
-  [index: string]: {
+interface Sub {
     ss: string, 
     to: string
     index: number
-  };
 }
-
+interface SubMap {
+  [index: string]: Sub
+}
 const subs: SubMap = {};
 
 const adjusted = (timings: string): string => {
@@ -22,6 +22,7 @@ const adjusted = (timings: string): string => {
 
 //change to linked list
 let count: number = 0;
+const pointer: Sub[] = [];
 const pushSubs = () => {
   const curr_sub = mp.get_property('sub-text');
   if (curr_sub === undefined) {
@@ -34,15 +35,25 @@ const pushSubs = () => {
     to: adjusted(to),
     index: count,
   };
+  pointer.push(subs[curr_sub]);
   count += 1;
 }
 
-const nSubs = (num_subs: number) => {
-  const curr_subs = mp.get_property('sub-text') as string;
-  if (num_subs > 1) {
-    subs[curr_subs].index
+export const nSubs = (num_subs: number) => {
+  mp.msg.warn('working!!');
+  try {
+    const curr_subs = mp.get_property('sub-text') as string;
+    const sub_info = subs[curr_subs];
+    if (num_subs > 1) {
+      const all_subs: Sub[] = [sub_info]
+      const index: number = sub_info.index;
+      for(let i = 1; i < num_subs; i++) {
+        all_subs.push(pointer[i + index]);
+      }
+    }
+  } catch(error) {
+    mp.msg.warn('No subs available');
   }
-
 }
 
 mp.observe_property('sub-text', 'string', pushSubs);

@@ -1,4 +1,19 @@
+//import { CardData } from '../sub2srs'
+//import data fixtures
+//import * as client from 'node-mpv'
+//todo: add status type in .d.ts file
+const client = require('node-mpv');
 
-test('placeholder mpv', () => {
-  expect(1).toBe(1);
+const player = new client({
+  'audio_only': false
+});
+const init = async () => {
+    await player.start();
+    await player.load('./tests/fixtures/shokugeki.mkv');
+}
+
+describe('subs2srs class', () => {
+  it('automatically grabs correct subs', async () => {
+    await init();
+    })
 })

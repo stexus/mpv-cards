@@ -1,10 +1,13 @@
 {
-  "name": "betteranimecards",
+  "name": "mpv-cards",
   "version": "1.0.0",
   "description": "Mux of mpvacious and mpv-nihongo/LaT in TS with an attempt at adding a particular feature not yet fully decided yet.",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "parcel build src/main.ts",
+    "clean": "rm -rf dist",
+    "dist": "bash ./install.sh"
   },
   "repository": {
     "type": "git",
@@ -21,6 +24,7 @@
     "@types/jest": "^26.0.14",
     "jest": "^26.4.2",
     "node-mpv": "^2.0.0-beta.1",
+    "parcel-bundler": "^1.12.4",
     "ts-jest": "^26.3.0",
     "typescript": "^4.0.3"
   }

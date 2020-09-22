@@ -23,9 +23,14 @@ export const user_config: config = {
   tag_name: 'animecards',
   media_collection_dir: process.env.HOME + '/.local/share/Anki2/User 1/collection.media'
 }
-const curl: string = 'curl';
+//const curl: string = 'curl';
 //todo: utility functions
 
+const key_handler = (): number => {
+  return 1;
+}
+key_handler();
+
 mp.add_key_binding('g', 'mpv-cards', () => subs2srs.nSubs(1));
-mp.add_key_binding('b', 'mpv-cards multiple', subs2srs.nSubs);
-mp.add_key_binding('Ctrl+b', 'flexible subs2srs', subs2srs.flexibleSubs)
+//mp.add_key_binding('b', 'mpv-cards', () => subs2srs.nSubs(key_handler()));
+//mp.add_key_binding('Ctrl+b', 'flexible subs2srs', () => subs2srs.flexibleSubs(key_handler()))

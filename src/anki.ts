@@ -8,6 +8,3 @@ function sendreq(): void {
 
 }
 
-function updateLast(card: CardData): void {
-}
-
