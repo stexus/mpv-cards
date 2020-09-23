@@ -5,7 +5,7 @@
 const client = require('node-mpv');
 
 const player = new client({
-  'audio_only': false
+  'audio_only': true
 });
 const init = async () => {
     await player.start();
@@ -35,10 +35,5 @@ describe('MPV grabbing information', () => {
 
 describe('MPV activating plugins', () => {
   it('sends a keypress', async() => {
-    await init();
-    await player.command('keypress', ['b']);
-    await player.pause();
-    await player.quit();
-
   })
 })

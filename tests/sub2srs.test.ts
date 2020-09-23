@@ -5,7 +5,7 @@
 const client = require('node-mpv');
 
 const player = new client({
-  'audio_only': false
+  'audio_only': true
 });
 const init = async () => {
     await player.start();
@@ -14,6 +14,5 @@ const init = async () => {
 
 describe('subs2srs class', () => {
   it('automatically grabs correct subs', async () => {
-    await init();
     })
 })
