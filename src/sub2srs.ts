@@ -10,10 +10,6 @@ interface Sub {
     to: number
     text: string
 }
-//interface SubMap {
-//  [index: string]: Sub
-//}
-
 const adjusted = (timings: string): number => {
   const delay = mp.get_property_native('sub-delay');
   if (delay === undefined) return +timings;
@@ -22,9 +18,6 @@ const adjusted = (timings: string): number => {
 }
 
 //use treeset instead
-//const pointer: Sub[] = [];
-//const subs: SubMap = {};
-
 const CompareSub = (sub_x: Sub, sub_y: Sub) => {
   return sub_x.to < sub_y.ss;
 }
@@ -48,15 +41,10 @@ const pushSubs = () => {
 }
 
 export const nSubs = (num_subs: number, updateLast: boolean) => {
-  //commented out in favor of treeset
+  //test treeset iteration
   try {
-    //const curr_subs = mp.get_property('sub-text') as string;
-    //const sub_info = subs[curr_subs];
     if (num_subs > 1) {
-     // const all_subs: Sub[] = [sub_info]
-      //const index: number = sub_info.index;
       for(let i = 1; i < num_subs; i++) {
-       // all_subs.push(pointer[i + index]);
       }
     }
     updateLast ? anki.updateLastNote() : anki.addNote();
