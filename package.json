@@ -27,6 +27,7 @@
     "node-mpv": "^2.0.0-beta.1",
     "parcel-bundler": "^1.12.4",
     "ts-jest": "^26.4.0",
+    "tslib": "^2.0.1",
     "typescript": "^4.0.3"
   }
 }
