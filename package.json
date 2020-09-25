@@ -28,6 +28,7 @@
     "parcel-bundler": "^1.12.4",
     "ts-jest": "^26.4.0",
     "tslib": "^2.0.1",
+    "tstl": "^2.4.11",
     "typescript": "^4.0.3"
   }
 }

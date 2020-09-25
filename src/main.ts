@@ -31,6 +31,6 @@ const key_handler = (): number => {
 }
 key_handler();
 
-mp.add_key_binding('g', 'mpv-cards', () => subs2srs.nSubs(1));
+mp.add_key_binding('g', 'mpv-cards', () => subs2srs.nSubs(1, true));
 //mp.add_key_binding('b', 'mpv-cards', () => subs2srs.nSubs(key_handler()));
 //mp.add_key_binding('Ctrl+b', 'flexible subs2srs', () => subs2srs.flexibleSubs(key_handler()))
