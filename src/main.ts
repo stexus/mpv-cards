@@ -10,6 +10,8 @@ interface config {
   note_type: string,
   tag_name: string ,
   media_collection_dir: string,
+  audio_field: string,
+  sentence_field: string,
 }
 
 export const user_config: config = {
@@ -21,7 +23,9 @@ export const user_config: config = {
   deck_name: 'Manual Mine',
   note_type: 'Audio Cards',
   tag_name: 'animecards',
-  media_collection_dir: process.env.HOME + '/.local/share/Anki2/User 1/collection.media'
+  media_collection_dir: process.env.HOME + '/.local/share/Anki2/User 1/collection.media',
+  audio_field: 'Audio',
+  sentence_field: 'Sentence',
 }
 //const curl: string = 'curl';
 //todo: utility functions
