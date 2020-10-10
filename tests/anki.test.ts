@@ -1,11 +1,6 @@
+import * as api from './replicas/anki'
 
-describe('Update card', () => {
-  it('updates correct card', () => {
-
-  })
-  it('correctly updates audio', () => {
-
-  })
-
+it("adds note with correct information given", () => {
+  api.addNote();
 })
 
