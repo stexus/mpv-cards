@@ -1,3 +1,4 @@
+import * as test from './helper'
 import {user_config as config} from './main';
 interface CardData { 
   sentence: string;
@@ -11,7 +12,7 @@ interface Fields {
   },
 }
 
-const sendreq = (action: string, params: {[key: string]: unknown}): unknown => { 
+export const sendreq = (action: string, params: {[key: string]: unknown}): unknown => { 
   console.log(params, action);
   return;
 }
@@ -68,7 +69,7 @@ export const updateLastNote = (data: CardData) => {
 
 export const addNote = () => {
   const data = ''
-  sendreq('addNote', {
+  test.sendreq('addNote', {
     note: {
       deckName: config.deck_name,
       modelName: config.note_type,
