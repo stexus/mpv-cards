@@ -1,9 +1,10 @@
 import * as test from './helper'
-import {user_config as config} from './main';
+import {user_config as config} from './main'
 interface CardData { 
-  sentence: string;
-  picture: string;
-  audio: string;
+  Word?: string;
+  Sentence: string;
+  Picture: string;
+  Audio: string;
 }
 interface Fields {
   [key: string]: {
@@ -17,26 +18,26 @@ export const sendreq = (action: string, params: {[key: string]: unknown}): unkno
   return;
 }
 
-const getLastNoteId = () => {
+export const getLastNoteId = () => {
   //mp.msg.warn("last note");
   //findNotes will always return either an emtpy array or array of numbers
-  const res = sendreq("findNotes", { query: "added:1" }) as number[];
+  const res = test.sendreq("findNotes", { query: "added:1" }) as number[];
   if (res && res.length > 1) {
       return res.reduce(function (a, b) {
         return Math.max(a, b);
       });
   }
-  return res[0];
+  return res[0] ? res[0] : -1;
 }
 
-const getLastAudio = (id: number, updateLast: boolean) => {
+export const getLastAudio = (id: number, updateLast: boolean) => {
   //mp.msg.warn("last audio note");
   if (!updateLast) {
     return "";
   }
   //will always return an array of fields or an empty object
-  const res = sendreq("notesInfo", { notes: [id] }) as any;
-  if (!Object.keys(res[0]).length) {
+  const res = test.sendreq("notesInfo", { notes: [id] }) as any;
+  if (Object.keys(res[0]).length) {
     const fields: Fields = res[0].fields;
     try {
       if (fields[config.sentence_field].value) {
@@ -50,15 +51,15 @@ const getLastAudio = (id: number, updateLast: boolean) => {
       //mp.msg.warn('Field doesn\'t exist');
     }
   }
-
   return "";
 }
 export const updateLastNote = (data: CardData) => {
   const lastId = getLastNoteId();
+  if (lastId < 0) return;
   const lastAudio = getLastAudio(lastId, true);
   //change to real audio adding
-  data.audio += lastAudio;
-  sendreq("updateNoteFields", {
+  data.Audio = lastAudio + data.Audio;
+  test.sendreq("updateNoteFields", {
     note: {
       id: lastId,
       fields: data,
@@ -67,13 +68,13 @@ export const updateLastNote = (data: CardData) => {
   });
 }
 
-export const addNote = () => {
-  const data = ''
+export const addNote = (data: CardData) => {
   test.sendreq('addNote', {
     note: {
       deckName: config.deck_name,
       modelName: config.note_type,
-      fields: data
+      fields: data,
+      tags: [config.tag_name],
     }
   })
 }
