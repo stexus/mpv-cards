@@ -1,8 +1,9 @@
 import {user_config as config} from './main';
 interface CardData { 
-  sentence: string;
-  picture: string;
-  audio: string;
+  Word?: string;
+  Sentence: string;
+  Picture: string;
+  Audio: string;
 }
 const ANKICONNECT_VER: number = 6;
 interface Result {
@@ -49,7 +50,7 @@ const getLastNoteId = () => {
         return Math.max(a, b);
       });
   }
-  return res[0];
+  return res[0] ? res[0] : -1;
 }
 
 const getLastAudio = (id: number, updateLast: boolean) => {
@@ -59,7 +60,7 @@ const getLastAudio = (id: number, updateLast: boolean) => {
   }
   //will always return an array of fields or an empty object
   const res = sendreq("notesInfo", { notes: [id] }) as any;
-  if (!Object.keys(res[0]).length) {
+  if (Object.keys(res[0]).length) {
     const fields: Fields = res[0].fields;
     try {
       if (fields[config.sentence_field].value) {
@@ -79,9 +80,8 @@ const getLastAudio = (id: number, updateLast: boolean) => {
 export const updateLastNote = (data: CardData) => {
   const lastId = getLastNoteId();
   const lastAudio = getLastAudio(lastId, true);
-
   //change to real audio adding
-  data.audio += lastAudio;
+  data.Audio = lastAudio + data.Audio;
   sendreq("updateNoteFields", {
     note: {
       id: lastId,
@@ -91,13 +91,13 @@ export const updateLastNote = (data: CardData) => {
   });
 }
 
-export const addNote = () => {
-  const data = ''
+export const addNote = (data: CardData) => {
   sendreq('addNote', {
     note: {
       deckName: config.deck_name,
       modelName: config.note_type,
-      fields: data
+      fields: data,
+      tags: [config.tag_name],
     }
   })
   return;
