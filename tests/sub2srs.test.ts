@@ -93,7 +93,13 @@ describe('test treemap function', () => {
       to: 941,
       text: "訴えるよ？",
     })
-    const curr_sub: string = "雨女は鞠莉さんでしょ？";
+    subs.add({
+      ss: 950,
+      to: 951,
+      text: "do not add",
+    })
+    //const curr_sub: string = "雨女は鞠莉さんでしょ？";
+    const curr_sub: string = "ホワイ？ 果南だよ～";
     //let it = subs.find({ss: 935.8, to: 937, text: curr_sub});
     //if (!it.equals(subs.end())) {
     //  const test: Sub = it.key as Sub;
@@ -103,10 +109,24 @@ describe('test treemap function', () => {
       const test: Sub = it.key as Sub;
       console.log(`key: ${test.text}`);
     }
-    for(let it = subs.find({ss: 935.8, to: 937, text: curr_sub}); !it.equals(subs.end()); it.next()) {
+
+    let sentence: string = '';
+    const start: number = 937.6;
+    let end: number = start;
+    const actual: Sub[] = [];
+    for(let it = subs.find({ss: 937.6, to: 939, text: curr_sub}); !it.equals(subs.end()); it.next()) {
       const test: Sub = it.key as Sub;
-      console.log(`find key: ${test.text}`);
+      if (test.to - end >= 5) continue;
+      end = test.to;
+      sentence = `${sentence} ${test.text}`;
+      actual.push(test);
     }
+
+    expect(start).toBe(937.6);
+    expect(end).toBe(941);
+    expect(actual[0].text).toBe("ホワイ？ 果南だよ～");
+    expect(actual[1].text).toBe("訴えるよ？");
+    expect(actual[2]).toBe(undefined);
   })
 
 

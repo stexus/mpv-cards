@@ -1,4 +1,5 @@
 import * as anki from './anki';
+import * as ffmpeg from './ffmpeg';
 import { TreeSet } from 'jstreemap';
 interface Sub {
     ss: number, 
@@ -15,10 +16,10 @@ const getSubInfo = (): {ss: string, to: string, text: string} => {
       text,
     }
 }
-const adjusted = (timings: string): number => {
+const adjusted = (timing: number): number => {
   const delay = mp.get_property_native('sub-delay');
-  if (delay === undefined) return +timings;
-  const new_timings = Number(delay) + Number(timings);
+  if (delay === undefined) return timing;
+  const new_timings = +delay + timing;
   return new_timings
 }
 
@@ -35,7 +36,7 @@ subs.compareFunc = (x: any, y: any) => {
 const pushSubs = () => {
   const curr_sub = getSubInfo();
   //test if adding multiple subs doesn't result in duplicates
-  if (isNaN(adjusted(curr_sub.ss)) || isNaN(adjusted(curr_sub.to)) || curr_sub === undefined) {
+  if (isNaN(adjusted(+curr_sub.ss)) || isNaN(adjusted(+curr_sub.to)) || curr_sub === undefined) {
     return;
   }
   subs.add({
@@ -43,8 +44,8 @@ const pushSubs = () => {
     to: +curr_sub.to,
     text: curr_sub.text
   });
-  mp.msg.warn(adjusted(curr_sub.ss).toString());
-  mp.msg.warn(adjusted(curr_sub.to).toString());
+  mp.msg.warn(adjusted(+curr_sub.ss).toString());
+  mp.msg.warn(adjusted(+curr_sub.to).toString());
 
 }
 
@@ -52,18 +53,25 @@ export const nSubs = (num_subs: number, updateLast: boolean) => {
   //test treeset iteration
   updateLast;
   try {
-    const curr_sub = getSubInfo();
+    const curr_sub: {ss: string, to: string, text: string} = getSubInfo();
     let sentence: string = '';
+    const start: number = +curr_sub.ss;
+    let end: number = start;
     //if next sub time is over 10 seconds away, don't add 
     //make sure ss, to are adjusted
     for(let it = subs.find({ss: +curr_sub.ss, to: +curr_sub.to, text: curr_sub.text}); !it.equals(subs.end()) && num_subs > 0; num_subs--, it.next()) {
       const temp: Sub = it.key as Sub;
-      sentence += temp.text;
+      //format sentences:compressDialogue(temp.text) or something of the sort;
+      sentence = `${sentence} ${temp.text}`;
+      if (temp.to - end >= 5) continue;
+      end = temp.to;
       mp.msg.warn(`sentence key: ${sentence}`);
     }
 
-    const audio = '[audio]';
-    const picture = '[picture]';
+    //for ffmpeg 
+    const audio = `[sound:${ffmpeg.clipaudio(adjusted(start), adjusted(end))}]`;
+    const picture = `<img src=\"${ffmpeg.screenshot(adjusted(start), adjusted(end))}\" />`;
+    //===============
     const data: anki.CardData = {
       Sentence: sentence,
       Picture: picture,
@@ -71,6 +79,7 @@ export const nSubs = (num_subs: number, updateLast: boolean) => {
     };
     data;
     anki;
+    //adding to anki variations:
     //anki.addNote(data);
     //anki.addNote();
     //anki.updateLast();

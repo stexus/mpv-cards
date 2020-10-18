@@ -4,6 +4,7 @@ export interface CardData {
   Sentence: string;
   Picture: string;
   Audio: string;
+  Misc?: string;
 }
 const ANKICONNECT_VER: number = 6;
 interface Result {
