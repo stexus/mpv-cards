@@ -58,16 +58,54 @@ describe('test treemap function', () => {
     const subs = new TreeSet();
     subs.compareFunc = (x: any, y: any) => {
       if (x.to < y.to) {
-        return 1;
-      } else if (x.to > y.to) {
         return -1;
+      } else if (x.to > y.to) {
+        return 1;
       } return 0
     }
-    const curr_sub: string = "神様が願いを叶えさせたくないのかもしれませんわね";
-
-    for(let it = subs.find({text: curr_sub}); !it.equals(subs.end()); it.next()) {
+    subs.add({
+      ss: 929,
+      to: 931,
+      text: "雨…ですわ",
+    })
+    subs.add({
+      ss: 931.7,
+      to: 934,
+      text: "また？ まったくダイヤは",
+    })
+    subs.add({
+      ss: 934.2,
+      to: 935,
+      text: "待って わたくし？",
+    })
+    subs.add({
+      ss: 935.8,
+      to: 937,
+      text: "雨女は鞠莉さんでしょ？",
+    })
+    subs.add({
+      ss: 937.6,
+      to: 939,
+      text: "ホワイ？ 果南だよ～",
+    })
+    subs.add({
+      ss: 940,
+      to: 941,
+      text: "訴えるよ？",
+    })
+    const curr_sub: string = "雨女は鞠莉さんでしょ？";
+    //let it = subs.find({ss: 935.8, to: 937, text: curr_sub});
+    //if (!it.equals(subs.end())) {
+    //  const test: Sub = it.key as Sub;
+    //  console.log(`Found key: ${test.text}`); // 1
+    //}
+    for (let it = subs.begin(); !it.equals(subs.end()); it.next()) {
       const test: Sub = it.key as Sub;
-      console.log(test.text);
+      console.log(`key: ${test.text}`);
+    }
+    for(let it = subs.find({ss: 935.8, to: 937, text: curr_sub}); !it.equals(subs.end()); it.next()) {
+      const test: Sub = it.key as Sub;
+      console.log(`find key: ${test.text}`);
     }
   })
 
