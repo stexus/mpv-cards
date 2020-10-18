@@ -1,5 +1,5 @@
 import {user_config as config} from './main';
-interface CardData { 
+export interface CardData { 
   Word?: string;
   Sentence: string;
   Picture: string;

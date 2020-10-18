@@ -1,13 +1,19 @@
+import * as anki from './anki';
 import { TreeSet } from 'jstreemap';
-export interface CardData { 
-  sentence: string;
-  picture: string;
-  audio: string;
-}
 interface Sub {
     ss: number, 
     to: number
     text: string
+}
+const getSubInfo = (): {ss: string, to: string, text: string} => {
+    const text: string = mp.get_property('sub-text') as string;
+    const ss = mp.get_property('sub-start') as string;
+    const to = mp.get_property('sub-end') as string;
+    return {
+      ss,
+      to,
+      text,
+    }
 }
 const adjusted = (timings: string): number => {
   const delay = mp.get_property_native('sub-delay');
@@ -27,44 +33,53 @@ subs.compareFunc = (x: any, y: any) => {
 }
 
 const pushSubs = () => {
-  const curr_sub = mp.get_property('sub-text');
+  const curr_sub = getSubInfo();
   //test if adding multiple subs doesn't result in duplicates
-  const ss = mp.get_property('sub-start') as string;
-  const to = mp.get_property('sub-end') as string;
-  if (isNaN(adjusted(ss)) || isNaN(adjusted(to)) || curr_sub === undefined) {
+  if (isNaN(adjusted(curr_sub.ss)) || isNaN(adjusted(curr_sub.to)) || curr_sub === undefined) {
     return;
   }
   subs.add({
-    ss: +ss,
-    to: +to,
-    text: curr_sub
+    ss: +curr_sub.ss,
+    to: +curr_sub.to,
+    text: curr_sub.text
   });
-  mp.msg.warn(adjusted(ss).toString());
-  mp.msg.warn(adjusted(to).toString());
+  mp.msg.warn(adjusted(curr_sub.ss).toString());
+  mp.msg.warn(adjusted(curr_sub.to).toString());
+
 }
+
 export const nSubs = (num_subs: number, updateLast: boolean) => {
   //test treeset iteration
   updateLast;
   try {
-    const curr_sub: string = mp.get_property('sub-text') as string;
-    const ss = mp.get_property('sub-start') as string;
-    const to = mp.get_property('sub-end') as string;
-    for(let it = subs.find({ss: +ss, to: +to, text: curr_sub}); !it.equals(subs.end()); it.next()) {
-      const test: Sub = it.key as Sub;
-      mp.msg.warn(`find key: ${test.text}`);
-    }
+    const curr_sub = getSubInfo();
+    let sentence: string = '';
     //if next sub time is over 10 seconds away, don't add 
-    if (num_subs > 1) {
-      for(let it = subs.find({text: curr_sub}); !it.equals(subs.end()) || num_subs <= 0; num_subs--, it.next()) {
-        //add to string and remove format
-      }
-      //add to anki
+    //make sure ss, to are adjusted
+    for(let it = subs.find({ss: +curr_sub.ss, to: +curr_sub.to, text: curr_sub.text}); !it.equals(subs.end()) && num_subs > 0; num_subs--, it.next()) {
+      const temp: Sub = it.key as Sub;
+      sentence += temp.text;
+      mp.msg.warn(`sentence key: ${sentence}`);
     }
+
+    const audio = '[audio]';
+    const picture = '[picture]';
+    const data: anki.CardData = {
+      Sentence: sentence,
+      Picture: picture,
+      Audio: audio,
+    };
+    data;
+    anki;
+    //anki.addNote(data);
+    //anki.addNote();
+    //anki.updateLast();
   } catch(error) {
     mp.msg.warn(error);
     mp.msg.warn('No subs available');
   }
 }
+
 
 mp.observe_property('sub-text', 'string', pushSubs);
 
