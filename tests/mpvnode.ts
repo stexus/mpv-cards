@@ -18,5 +18,5 @@ const startSequence = async () => {
   console.log(subs);
 }
 
-startSequence();
+//startSequence();
 
