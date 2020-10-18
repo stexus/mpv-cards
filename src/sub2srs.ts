@@ -1,6 +1,7 @@
-import * as anki from './anki';
-import * as ffmpeg from './ffmpeg';
+import { CardData, addNote, updateLastNote } from './anki';
+import { screenshot, clipaudio }from './ffmpeg';
 import { TreeSet } from 'jstreemap';
+
 interface Sub {
     ss: number, 
     to: number
@@ -57,11 +58,15 @@ export const nSubs = (num_subs: number, updateLast: boolean) => {
     let sentence: string = '';
     const start: number = +curr_sub.ss;
     let end: number = start;
-    //if next sub time is over 10 seconds away, don't add 
-    //make sure ss, to are adjusted
+    //if next sub time is over 5 seconds away, don't add 
+    //
+    //TODO: make sure ss, to are adjusted
+    //
     for(let it = subs.find({ss: +curr_sub.ss, to: +curr_sub.to, text: curr_sub.text}); !it.equals(subs.end()) && num_subs > 0; num_subs--, it.next()) {
       const temp: Sub = it.key as Sub;
-      //format sentences:compressDialogue(temp.text) or something of the sort;
+
+      //TODO: format sentences:compressDialogue(temp.text) or something of the sort;
+       
       sentence = `${sentence} ${temp.text}`;
       if (temp.to - end >= 5) continue;
       end = temp.to;
@@ -69,20 +74,22 @@ export const nSubs = (num_subs: number, updateLast: boolean) => {
     }
 
     //for ffmpeg 
-    const audio = `[sound:${ffmpeg.clipaudio(adjusted(start), adjusted(end))}]`;
-    const picture = `<img src=\"${ffmpeg.screenshot(adjusted(start), adjusted(end))}\" />`;
+    const audio = `[sound:${clipaudio(adjusted(start), adjusted(end))}]`;
+    const picture = `<img src=\"${screenshot(adjusted(start), adjusted(end))}\" />`;
     //===============
-    const data: anki.CardData = {
+    const data: CardData = {
+      Word: 'replace',
       Sentence: sentence,
       Picture: picture,
       Audio: audio,
     };
-    data;
-    anki;
-    //adding to anki variations:
-    //anki.addNote(data);
-    //anki.addNote();
-    //anki.updateLast();
+    if (updateLast) {
+      delete data.Word;
+      updateLastNote(data);
+    } else {
+      addNote(data);
+    }
+
   } catch(error) {
     mp.msg.warn(error);
     mp.msg.warn('No subs available');

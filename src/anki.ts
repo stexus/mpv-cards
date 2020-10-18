@@ -20,12 +20,13 @@ interface Fields {
 
 const sendreq = (action: string, params: {[key: string]: unknown}): unknown => { 
   const address = '127.0.0.1:8765';
-  const request = JSON.stringify({action, ANKICONNECT_VER, params})
+  const request = JSON.stringify({action, version: ANKICONNECT_VER, params})
+  mp.msg.warn(request);
   const command = [ 'curl', '-s', address, '-X', 'POST', '-d', request]
   const raw = mp.command_native({
     name: 'subprocess',
     playback_only: false,
-    capture_stout: true,
+    capture_stdout: true,
     args: command
   })
 
@@ -37,7 +38,7 @@ const sendreq = (action: string, params: {[key: string]: unknown}): unknown => {
       mp.msg.warn(`Couldn't connect to Anki.`);
     }
   }
-  const req: Result= JSON.parse(raw);
+  const req: Result= JSON.parse(raw.stdout);
   if (req.error) return null;
   return req.result;
 }
@@ -80,8 +81,11 @@ const getLastAudio = (id: number, updateLast: boolean) => {
 }
 export const updateLastNote = (data: CardData) => {
   const lastId = getLastNoteId();
+  if (lastId < 0) {
+    mp.osd_message('No cards found');
+    return;
+  } 
   const lastAudio = getLastAudio(lastId, true);
-  //change to real audio adding
   data.Audio = lastAudio + data.Audio;
   sendreq("updateNoteFields", {
     note: {

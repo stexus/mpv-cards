@@ -30,11 +30,43 @@ export const user_config: config = {
 //const curl: string = 'curl';
 //todo: utility functions
 
-const key_handler = (): number => {
-  return 1;
+/* @source pigoz/mpv-nihongo */
+const key_handler = (n: number, updateLast: boolean) => {
+  return () => {
+    close();
+    mp.osd_message(`Processing ${n} contiguous subs`);
+    subs2srs.nSubs(n, updateLast);
+  }
 }
-key_handler();
 
-mp.add_key_binding('g', 'mpv-cards', () => subs2srs.nSubs(3, true));
+/* @source pigoz/mpv-nihongo */
+//const otherBindings: {key: string, name: string, fn: () => void}[] = [
+//  {key: 'g', name: 'grab-subs', fn: () => subs2srs.nSubs(1, true)},
+//  {key: 'Esc', name: 'closeMpvCards', fn: close},
+//];
+function close(): void {
+    for (let i = 0; i < 10; i++) {
+      mp.remove_key_binding(i.toString());
+    }
+    mp.remove_key_binding('grab-subs');
+    mp.remove_key_binding('close-mpv-cards');
+    mp.osd_message('');
+    //for (let bind of otherBindings) {
+    //  mp.remove_key_binding(bind.name);
+    //}
+}
+function open(updateLast: boolean): void { 
+  mp.osd_message('[mpv-cards] How many contiguous subs? [0..9]', 9999);
+  for (let i = 1; i < 10; i++) {
+    mp.add_key_binding(i.toString(), `${i}-lines`, key_handler(i, updateLast));
+  }
+  mp.add_forced_key_binding('g', 'grab-subs', key_handler(1, updateLast));
+  mp.add_forced_key_binding('Esc', 'close-mpv-cards', close);
+  //for (let bind of otherBindings) {
+  //  mp.add_forced_key_binding(bind.key, bind.name, bind.fn);
+  //}
+}
+
+mp.add_key_binding('g', 'mpv-cards', () => open(true));
 //mp.add_key_binding('b', 'mpv-cards', () => subs2srs.nSubs(key_handler()));
 //mp.add_key_binding('Ctrl+b', 'flexible subs2srs', () => subs2srs.flexibleSubs(key_handler()))

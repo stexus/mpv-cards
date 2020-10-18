@@ -1,6 +1,7 @@
-import * as config from './main'
+import {user_config as config} from './main'
 export const screenshot = (ss: number, to: number) => {
   const output = 'temp output';
+  //TODO: adjust ss to a good time
   ss = ss + to;
   const path = mp.get_property('path');
   var command = [
@@ -28,10 +29,8 @@ export const screenshot = (ss: number, to: number) => {
     "scale=-1:520",
     "-vframes",
     "1",
-    `${config.user_config.media_collection_dir}"/"${output}`
+    `${config.media_collection_dir}"/"${output}`
   ];
-  mp.msg.warn(command.toString());
-  mp.msg.warn("screenshot taken");
   command;
   return output;
 }
@@ -76,7 +75,6 @@ export const clipaudio = (ss: number, to: number) => {
     "18k",
     output,
   ];
-  mp.msg.warn(command.toString());
   //mp.commandv(...command);
   command;
   return output;

@@ -121,7 +121,6 @@ describe('test treemap function', () => {
       sentence = `${sentence} ${test.text}`;
       actual.push(test);
     }
-
     expect(start).toBe(937.6);
     expect(end).toBe(941);
     expect(actual[0].text).toBe("ホワイ？ 果南だよ～");
