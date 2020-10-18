@@ -1,4 +1,4 @@
-import {TreeSet} from 'jstreemap';
+import { TreeSet } from 'jstreemap';
 export interface CardData { 
   sentence: string;
   picture: string;
