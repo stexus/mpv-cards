@@ -2,4 +2,4 @@
 
 MPV_SCRIPTS_DIR="$HOME/.config/mpv/scripts"
 
- cp dist/main.js "$MPV_SCRIPTS_DIR"/main.js  
+ cp dist/main.bundle.js "$MPV_SCRIPTS_DIR"/main.bundle.js  

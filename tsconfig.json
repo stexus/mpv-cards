@@ -5,6 +5,7 @@
 
     "allowJs": false,
     "checkJs": false,
+    "noEmit": true,
 
     "sourceMap": true,
     "preserveConstEnums": true,

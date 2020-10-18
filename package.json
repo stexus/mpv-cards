@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "parcel build src/main.ts",
+    "build": "webpack",
+    "postinstall": "rm -rf ./.cache && node ./postinstall.js",
     "clean": "rm -rf dist",
     "dist": "bash ./install.sh"
   },
@@ -21,15 +22,24 @@
   },
   "homepage": "https://github.com/stexus/betteranimecards#readme",
   "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/plugin-transform-modules-commonjs": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
     "@babel/preset-typescript": "^7.10.4",
     "@types/jest": "^26.0.14",
+    "babel-loader": "^8.1.0",
     "jest": "^26.4.2",
     "node-mpv": "^2.0.0-beta.1",
     "parcel-bundler": "^1.12.4",
     "ts-jest": "^26.4.0",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "webpack": "^5.1.3",
+    "webpack-cli": "^4.0.0"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
+    "core-js": "^3.6.5",
+    "jstreemap": "^1.28.2",
     "tstl": "^2.4.11"
   }
 }
