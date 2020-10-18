@@ -3,6 +3,7 @@ import * as helper from './replicas/helper'
 afterEach(() => {
   jest.clearAllMocks();
 })
+
 it("sends correct addNote command with information given", () => {
   const spy = jest.spyOn(helper, 'sendreq');
   const data = {
