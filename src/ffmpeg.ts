@@ -1,8 +1,19 @@
 import {user_config as config} from './main'
+const mktemp = (extension: string) => {
+  const command = ['mktemp', `--suffix=.${extension}`, `${config.media_collection_dir}/sub2srs.XXXXXX`];
+  const raw = mp.command_native({
+    name: 'subprocess',
+    playback_only: false,
+    capture_stdout: true,
+    args: command
+  })
+  mp.msg.warn(`||${raw.stdout.trim()}||`);
+  return raw.stdout.trim();
+}
+
 export const screenshot = (ss: number, to: number) => {
-  const output = 'temp output';
-  //TODO: adjust ss to a good time
-  ss = ss + to;
+  const output = mktemp('webp');
+  ss = (ss + to) / 2;
   const path = mp.get_property('path');
   var command = [
     "run",
@@ -14,7 +25,7 @@ export const screenshot = (ss: number, to: number) => {
     "quiet",
     "-an",
     "-ss",
-    ss.toString(),
+    `${ss}`,
     "-i",
     path,
     "-vcodec",
@@ -24,19 +35,21 @@ export const screenshot = (ss: number, to: number) => {
     "-compression_level",
     "6",
     "-qscale:v",
-    "70",
+    `${config.screenshot_quality}`,
     "-vf",
-    "scale=-1:520",
+    `scale=${config.image_width}:${config.image_height}`,
     "-vframes",
     "1",
-    `${config.media_collection_dir}"/"${output}`
+    output
   ];
-  command;
+  mp.commandv(...command);
+  mp.msg.warn(command.toString());
   return output;
 }
 export const clipaudio = (ss: number, to: number) => {
-  //const output = mktemp('webp');
-  const output = 'temp output';
+  const output = mktemp('ogg');
+  ss = ss - config.audio_threshold;
+  to = to + config.audio_threshold;
   const path = mp.get_property('path');
   //change to configurations
   var command = [
@@ -49,18 +62,17 @@ export const clipaudio = (ss: number, to: number) => {
     "-loglevel",
     "quiet",
     "-ss",
-    ss.toString(),
+    `${ss}`,
     //sts(start - AUDIO_THRESHOLD),
     "-to",
-    to.toString(),
+    `${to}`,
     //sts(end + AUDIO_THRESHOLD),
     "-i",
     path,
     "-map_metadata",
     "-1",
     "-map",
-    //audio stream with japanese
-    "0:1",
+    `0:${mp.get_property('aid')}`,
     "-ac",
     "1",
     "-codec:a",
@@ -75,7 +87,8 @@ export const clipaudio = (ss: number, to: number) => {
     "18k",
     output,
   ];
-  //mp.commandv(...command);
+  mp.msg.warn(command.toString());
+  mp.commandv(...command);
   command;
   return output;
 }

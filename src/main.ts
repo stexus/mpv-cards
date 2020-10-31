@@ -2,7 +2,7 @@ import * as subs2srs from './sub2srs';
 //probably useless
 interface config {
   audio_threshold: number,
-  image_width: number,// negative num for auto width
+  image_width: number,// negative -2 for auto width
   image_height: number,
   image_delay_percent: number,
   screenshot_quality: number, //0 - 100, 100 is best
@@ -16,14 +16,15 @@ interface config {
 
 export const user_config: config = {
   audio_threshold: 0.25,
-  image_width: 520,
+  image_width: -2,
   image_height: 520,
   image_delay_percent: 0.08,
   screenshot_quality: 70, 
   deck_name: 'Manual Mine',
   note_type: 'Audio Cards',
   tag_name: 'animecards',
-  media_collection_dir: process.env.HOME + '/.local/share/Anki2/User 1/collection.media',
+  media_collection_dir: process.env.HOME + '/.local/share/Anki2/User 1/test',
+  //media_collection_dir: process.env.HOME + '/.local/share/Anki2/User 1/collection.media',
   audio_field: 'Audio',
   sentence_field: 'Sentence',
 }
