@@ -53,7 +53,6 @@ const pushSubs = () => {
 const exportHandler = (ss: number, to: number, sentence: string, updateLast: boolean) => {
   const audio = `[sound:${clipaudio(ss, to)}]`;
   const picture = `<img src=\"${screenshot(ss, to)}\" />`;
-  //===============
   const data: CardData = {
     Word: 'replace',
     Sentence: sentence,

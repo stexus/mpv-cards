@@ -12,7 +12,6 @@ const mktemp = (extension: string) => {
     capture_stdout: true,
     args: command
   })
-  mp.msg.warn(`||${raw.stdout.trim()}||`);
   return raw.stdout.trim();
 }
 
@@ -48,7 +47,7 @@ export const screenshot = (ss: number, to: number) => {
     output
   ];
   mp.commandv(...command);
-  mp.msg.warn(command.toString());
+  //mp.msg.warn(command.toString());
   return filename(output);
 }
 export const clipaudio = (ss: number, to: number) => {
@@ -89,7 +88,7 @@ export const clipaudio = (ss: number, to: number) => {
     "18k",
     output,
   ];
-  mp.msg.warn(command.toString());
+  //mp.msg.warn(command.toString());
   mp.commandv(...command);
   return filename(output);
 }
