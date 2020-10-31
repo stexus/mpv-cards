@@ -17,6 +17,24 @@ const getSubInfo = (): {ss: string, to: string, text: string} => {
       text,
     }
 }
+/* @source pigoz/mpv-nihongo */
+const compressDialogLines = (text: string) => {
+  const loneCCRegex = /^（[^）]+）$/g;
+  // If the whole text is just one CC line, assume we want to keep it
+  if (loneCCRegex.test(text)) {
+    return text;
+  }
+  const regex = /(^|\s)（[^）]+）/gm;
+  let stripped;
+  if ((text.match(regex) || []).length >= 2) {
+    // Replace with simple dash when there are multiple speakers
+    stripped = text.replace(regex, '$1- ');
+  } else {
+    // Remove CC dialog speaker name
+    stripped = text.replace(regex, '$1');
+  }
+  return stripped.replace(/(^|\s)\n/g, '$1');
+}
 const adjusted = (timing: number): number => {
   const delay = mp.get_property_native('sub-delay');
   if (delay === undefined) return timing;
@@ -66,16 +84,18 @@ export const nSubs = (num_subs: number, updateLast: boolean) => {
       const temp: Sub = it.key as Sub;
 
       //TODO: format sentences:compressDialogue(temp.text) or something of the sort;
-       
-      sentence = `${sentence} ${temp.text}`;
+      sentence = `${sentence} ${temp.text.trim()}`;
       if (temp.to - end >= 5) continue;
       end = temp.to;
       mp.msg.warn(`sentence key: ${sentence}`);
     }
-
+    if (isNaN(start) || isNaN(end)) {
+      throw 'Invalid start and end times';
+    }
     //for ffmpeg 
     const audio = `[sound:${clipaudio(adjusted(start), adjusted(end))}]`;
     const picture = `<img src=\"${screenshot(adjusted(start), adjusted(end))}\" />`;
+    sentence = compressDialogLines(sentence);
     //===============
     const data: CardData = {
       Word: 'replace',
@@ -91,7 +111,7 @@ export const nSubs = (num_subs: number, updateLast: boolean) => {
     }
 
   } catch(error) {
-    mp.msg.warn(error);
+    mp.osd_message(error);
     mp.msg.warn('No subs available');
   }
 }

@@ -1,4 +1,9 @@
 import {user_config as config} from './main'
+
+const filename = (absolute_path: string) => {
+  return absolute_path.replace(/^.*[\\\/]/, '');
+}
+
 const mktemp = (extension: string) => {
   const command = ['mktemp', `--suffix=.${extension}`, `${config.media_collection_dir}/sub2srs.XXXXXX`];
   const raw = mp.command_native({
@@ -44,14 +49,13 @@ export const screenshot = (ss: number, to: number) => {
   ];
   mp.commandv(...command);
   mp.msg.warn(command.toString());
-  return output;
+  return filename(output);
 }
 export const clipaudio = (ss: number, to: number) => {
   const output = mktemp('ogg');
   ss = ss - config.audio_threshold;
   to = to + config.audio_threshold;
   const path = mp.get_property('path');
-  //change to configurations
   var command = [
     "run",
     "ffmpeg",
@@ -63,10 +67,8 @@ export const clipaudio = (ss: number, to: number) => {
     "quiet",
     "-ss",
     `${ss}`,
-    //sts(start - AUDIO_THRESHOLD),
     "-to",
     `${to}`,
-    //sts(end + AUDIO_THRESHOLD),
     "-i",
     path,
     "-map_metadata",
@@ -89,6 +91,5 @@ export const clipaudio = (ss: number, to: number) => {
   ];
   mp.msg.warn(command.toString());
   mp.commandv(...command);
-  command;
-  return output;
+  return filename(output);
 }

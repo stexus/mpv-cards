@@ -23,8 +23,8 @@ export const user_config: config = {
   deck_name: 'Manual Mine',
   note_type: 'Audio Cards',
   tag_name: 'animecards',
-  media_collection_dir: process.env.HOME + '/.local/share/Anki2/User 1/test',
-  //media_collection_dir: process.env.HOME + '/.local/share/Anki2/User 1/collection.media',
+  //media_collection_dir: process.env.HOME + '/.local/share/Anki2/User 1/test',
+  media_collection_dir: process.env.HOME + '/.local/share/Anki2/User 1/collection.media',
   audio_field: 'Audio',
   sentence_field: 'Sentence',
 }
@@ -69,5 +69,6 @@ function open(updateLast: boolean): void {
 }
 
 mp.add_key_binding('g', 'mpv-cards', () => open(true));
+mp.add_key_binding('ctrl+g', 'flexible-mpv-cards', () => open(false));
 //mp.add_key_binding('b', 'mpv-cards', () => subs2srs.nSubs(key_handler()));
 //mp.add_key_binding('Ctrl+b', 'flexible subs2srs', () => subs2srs.flexibleSubs(key_handler()))
