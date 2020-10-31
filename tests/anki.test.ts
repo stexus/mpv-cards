@@ -22,9 +22,9 @@ describe("updates fields with right values", () => {
   const spy = jest.spyOn(helper, 'sendreq');
   it('gets correct last note id', () => {
     spy.mockReturnValueOnce([1602361222569, 1602361507119, 1602362135119, 1602362721419, 1602363287294, 1602363455545, 1602363505944, 1602363677044, 1602365437319, 1602370663594]);
-    expect(api.getLastNoteId()).toBe(1602370663594);
+    expect(api.getLastNoteIds(1)[0]).toBe(1602370663594);
     spy.mockReturnValueOnce([]);
-    expect(api.getLastNoteId()).toBe(-1);
+    expect(api.getLastNoteIds(1).length).toBe(0);
   })
   it('gets the correct last audio field', () => {
     const raw = '{"result": [{"noteId": 1601159298407,"tags": ["yomichan"],"fields": {"Word": {"value": "some word","order": 0},"Reading": {"value": "some reading","order": 1},"Glossary": {"value": "some glossary","order": 2},"Sentence": {"value": "some sentence","order": 3},"Picture": {"value": "some picture","order": 4},"Audio": {"value": "IMPORTANT AUDIO","order": 5},"Hint": {"value": "","order": 6}},"modelName": "Audio Cards","cards": [1601159298409]}],"error": null}';
@@ -59,10 +59,14 @@ describe("updates fields with right values", () => {
     }
     const lastAudio = api.getLastAudio(-1, true);
     expect(lastAudio).toBe("IMPORTANT AUDIO");
-    const lastId = api.getLastNoteId();
+    const lastId = api.getLastNoteIds(1)[0];
     expect(lastId).toBe(1602370663594);
-    api.updateLastNote(data);
+    api.updateLastNote(1, data);
     expect(spy).toHaveBeenCalledTimes(5);
+
+    const last3Ids = api.getLastNoteIds(3);
+    expect(last3Ids.toString()).toBe('1602363677044,1602365437319,1602370663594')
+
     const request = JSON.stringify({action: spy.mock.calls[4][0], version: 6, 'params': spy.mock.calls[4][1]})
     const expected = '{"action": "updateNoteFields","version": 6,"params": {"note": {"id": 1602370663594,"fields": {"Sentence": "update sentence","Picture": "update picture","Audio": "IMPORTANT AUDIOupdate audio"},"tags": ["animecards"]}}}';
     expect(request.replace(/\s+/g, '')).toBe(expected.replace(/\s+/g, ''));

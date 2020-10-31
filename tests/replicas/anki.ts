@@ -18,16 +18,12 @@ export const sendreq = (action: string, params: {[key: string]: unknown}): unkno
   return;
 }
 
-export const getLastNoteId = () => {
+export const getLastNoteIds = (lastN: number) => {
   //mp.msg.warn("last note");
   //findNotes will always return either an emtpy array or array of numbers
   const res = test.sendreq("findNotes", { query: "added:1" }) as number[];
-  if (res && res.length > 1) {
-      return res.reduce(function (a, b) {
-        return Math.max(a, b);
-      });
-  }
-  return res[0] ? res[0] : -1;
+  const lastId = res.slice(res.length - lastN, res.length);
+  return lastId;
 }
 
 export const getLastAudio = (id: number, updateLast: boolean) => {
@@ -53,19 +49,22 @@ export const getLastAudio = (id: number, updateLast: boolean) => {
   }
   return "";
 }
-export const updateLastNote = (data: CardData) => {
-  const lastId = getLastNoteId();
-  if (lastId < 0) return;
-  const lastAudio = getLastAudio(lastId, true);
-  //change to real audio adding
-  data.Audio = lastAudio + data.Audio;
-  test.sendreq("updateNoteFields", {
-    note: {
-      id: lastId,
-      fields: data,
-      tags: [config.tag_name],
-    },
-  });
+export const updateLastNote = (lastN: number, data: CardData) => {
+  const lastId = getLastNoteIds(lastN);
+  if (lastId.length === 0) return;
+  for (let id of lastId) {
+    const lastAudio = getLastAudio(id, true);
+    //change to real audio adding
+    data.Audio = lastAudio + data.Audio;
+    test.sendreq("updateNoteFields", {
+      note: {
+        id: id,
+        fields: data,
+        tags: [config.tag_name],
+      },
+    });
+
+  }
 }
 
 export const addNote = (data: CardData) => {
