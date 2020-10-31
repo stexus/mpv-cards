@@ -66,7 +66,7 @@ const getLastAudio = (id: number, updateLast: boolean) => {
     const fields: Fields = res[0].fields;
     try {
       if (fields[config.sentence_field].value) {
-        mp.msg.warn('Overriding updated field. Are you sure? y/n');
+        mp.osd_message("Overwriting sentence field");
       }
       mp.msg.warn(fields[config.audio_field].value);
       const audio = fields[config.audio_field].value;
@@ -94,6 +94,7 @@ export const updateLastNote = (data: CardData) => {
       tags: [config.tag_name],
     },
   });
+  mp.osd_message("Updated last note");
 }
 
 export const addNote = (data: CardData) => {
@@ -105,5 +106,6 @@ export const addNote = (data: CardData) => {
       tags: [config.tag_name],
     }
   })
+  mp.osd_message("Added card");
   return;
 }
