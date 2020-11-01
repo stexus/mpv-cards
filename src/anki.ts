@@ -30,6 +30,7 @@ const sendreq = (action: string, params: {[key: string]: unknown}): unknown => {
     args: command
   })
 
+  //TODO: osd messages/better anki error catching and stuff
   if (raw.stdout) {
     mp.msg.warn('anki> ' + raw.stdout);
   } else {
@@ -77,10 +78,11 @@ const getLastAudio = (id: number, updateLast: boolean) => {
 export const updateLastNote = (data: CardData, lastN: number) => {
   const lastIds = getLastNoteId(lastN);
   if (lastIds.length === 0) return;
+  const originalAudio = data.Audio;
   for (let i = 0; i < lastIds.length; i++) {
     const lastAudio = getLastAudio(lastIds[i], true);
     mp.msg.warn(lastIds[i].toString());
-    data.Audio = lastAudio + data.Audio;
+    data.Audio = lastAudio + originalAudio;
     sendreq("updateNoteFields", {
       note: {
         id: lastIds[i],

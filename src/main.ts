@@ -1,4 +1,5 @@
 import * as subs2srs from './sub2srs';
+//TODO: clean up dependencies
 //probably useless
 interface config {
   audio_threshold: number,
