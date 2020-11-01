@@ -79,6 +79,7 @@ export const updateLastNote = (data: CardData, lastN: number) => {
   if (lastIds.length === 0) return;
   for (let i = 0; i < lastIds.length; i++) {
     const lastAudio = getLastAudio(lastIds[i], true);
+    mp.msg.warn(lastIds[i].toString());
     data.Audio = lastAudio + data.Audio;
     sendreq("updateNoteFields", {
       note: {

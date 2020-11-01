@@ -57,10 +57,10 @@ function close(): void {
     //}
 }
 function open(updateLast: boolean, n: number): void { 
-  mp.osd_message('[mpv-cards] # of lines? [0..9]', 9999);
   close();
+  mp.osd_message('[mpv-cards] # of lines? [0..9]', 9999);
   for (let i = 1; i < 10; i++) {
-    mp.add_key_binding(i.toString(), `${i}-lines`, key_handler(n, i, updateLast));
+    mp.add_key_binding(i.toString(), `${i}`, key_handler(n, i, updateLast));
   }
   mp.add_forced_key_binding('g', 'grab-subs', key_handler(n, 1, updateLast));
   mp.add_forced_key_binding('Esc', 'close-mpv-cards', close);
@@ -71,8 +71,9 @@ function open(updateLast: boolean, n: number): void {
 
 const open_multiple = () => {
   for (let i = 1; i < 10; i++) {
-    mp.add_key_binding(i.toString(), `${i}-words`, () => open(true, i));
+    mp.add_key_binding(i.toString(), `${i}`, () => open(true, i));
   }
+  mp.osd_message('[mpv-cards] # of words to update? [0..9]', 9999);
   mp.add_forced_key_binding('Esc', 'close-mpv-cards', close);
 }
 
