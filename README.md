@@ -1,9 +1,6 @@
 # mpv-cards
 
-Mux of mpvacious and mpv-nihongo/LaT in Typescript with particular features I want. 
-
-todo:
-consider implementing Anacreon's subtitle method to get multiple lines without using mpv skip
+Mux of mpvacious and mpv-nihongo/LaT in Typescript with particular features I want. Notably, subtitles are stored as they arrive which allows for grabbing multiple lines without using the built-in mpv sub-seek command. This project also allows for updating multiple cards at once instead of manually updating for each note in a sentence with multiple unknown words. 
 
 [mpv-nihongo](https://github.com/pigoz/mpv-nihongo)
 - project structure from mpv-nihongo
