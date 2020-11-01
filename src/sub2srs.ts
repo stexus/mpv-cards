@@ -50,7 +50,7 @@ const pushSubs = () => {
 
 }
 
-const exportHandler = (ss: number, to: number, sentence: string, updateLast: boolean) => {
+const exportHandler = (ss: number, to: number, sentence: string, updateLast: boolean, lastN: number) => {
   const audio = `[sound:${clipaudio(ss, to)}]`;
   const picture = `<img src=\"${screenshot(ss, to)}\" />`;
   const data: CardData = {
@@ -61,13 +61,13 @@ const exportHandler = (ss: number, to: number, sentence: string, updateLast: boo
   };
   if (updateLast) {
     delete data.Word;
-    updateLastNote(data);
+    updateLastNote(data, lastN);
   } else {
     addNote(data);
   }
 }
 
-export const nSubs = (num_subs: number, updateLast: boolean) => {
+export const nSubs = (num_words:number, num_subs: number, updateLast: boolean) => {
   try {
     const curr_sub: {ss: number, to: number, text: string} = getSubInfo();
     let sentence: string = '';
@@ -85,7 +85,7 @@ export const nSubs = (num_subs: number, updateLast: boolean) => {
     if (isNaN(start) || isNaN(end)) {
       throw 'Invalid start and end times';
     }
-    exportHandler(start, end, sentence, updateLast);
+    exportHandler(start, end, sentence, updateLast, num_words);
 
   } catch(error) {
     mp.osd_message(error);

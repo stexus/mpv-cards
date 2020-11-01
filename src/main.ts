@@ -32,11 +32,11 @@ export const user_config: config = {
 //todo: utility functions
 
 /* @source pigoz/mpv-nihongo */
-const key_handler = (n: number, updateLast: boolean) => {
+const key_handler = (n_words: number, n_lines: number, updateLast: boolean) => {
   return () => {
     close();
-    mp.osd_message(`Processing ${n} contiguous subs`);
-    subs2srs.nSubs(n, updateLast);
+    mp.osd_message(`processing ${n_lines} lines and exporting ${n_words} word(s)`);
+    subs2srs.nSubs(n_words, n_lines, updateLast);
   }
 }
 
@@ -56,19 +56,28 @@ function close(): void {
     //  mp.remove_key_binding(bind.name);
     //}
 }
-function open(updateLast: boolean): void { 
-  mp.osd_message('[mpv-cards] How many contiguous subs? [0..9]', 9999);
+function open(updateLast: boolean, n: number): void { 
+  mp.osd_message('[mpv-cards] # of lines? [0..9]', 9999);
+  close();
   for (let i = 1; i < 10; i++) {
-    mp.add_key_binding(i.toString(), `${i}-lines`, key_handler(i, updateLast));
+    mp.add_key_binding(i.toString(), `${i}-lines`, key_handler(n, i, updateLast));
   }
-  mp.add_forced_key_binding('g', 'grab-subs', key_handler(1, updateLast));
+  mp.add_forced_key_binding('g', 'grab-subs', key_handler(n, 1, updateLast));
   mp.add_forced_key_binding('Esc', 'close-mpv-cards', close);
   //for (let bind of otherBindings) {
   //  mp.add_forced_key_binding(bind.key, bind.name, bind.fn);
   //}
 }
 
-mp.add_key_binding('g', 'mpv-cards', () => open(true));
-mp.add_key_binding('ctrl+g', 'flexible-mpv-cards', () => open(false));
+const open_multiple = () => {
+  for (let i = 1; i < 10; i++) {
+    mp.add_key_binding(i.toString(), `${i}-words`, () => open(true, i));
+  }
+  mp.add_forced_key_binding('Esc', 'close-mpv-cards', close);
+}
+
+mp.add_key_binding('g', 'mpv-cards', () => open(true, 1));
+mp.add_key_binding('ctrl+g', 'flexible-mpv-cards', () => open(false, 1));
+mp.add_key_binding('alt+g', 'update-multiple', () => open_multiple());
 //mp.add_key_binding('b', 'mpv-cards', () => subs2srs.nSubs(key_handler()));
 //mp.add_key_binding('Ctrl+b', 'flexible subs2srs', () => subs2srs.flexibleSubs(key_handler()))

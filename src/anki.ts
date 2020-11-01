@@ -43,16 +43,11 @@ const sendreq = (action: string, params: {[key: string]: unknown}): unknown => {
   return req.result;
 }
 
-const getLastNoteId = () => {
+const getLastNoteId = (lastN: number) => {
   mp.msg.warn("last note");
   //findNotes will always return either an emtpy array or array of numbers
   const res = sendreq("findNotes", { query: "added:1" }) as number[];
-  if (res && res.length > 1) {
-      return res.reduce(function (a, b) {
-        return Math.max(a, b);
-      });
-  }
-  return res[0] ? res[0] : -1;
+  return res.slice(res.length - lastN, res.length);
 }
 
 const getLastAudio = (id: number, updateLast: boolean) => {
@@ -79,21 +74,21 @@ const getLastAudio = (id: number, updateLast: boolean) => {
 
   return "";
 }
-export const updateLastNote = (data: CardData) => {
-  const lastId = getLastNoteId();
-  if (lastId < 0) {
-    mp.osd_message('No cards found');
-    return;
-  } 
-  const lastAudio = getLastAudio(lastId, true);
-  data.Audio = lastAudio + data.Audio;
-  sendreq("updateNoteFields", {
-    note: {
-      id: lastId,
-      fields: data,
-      tags: [config.tag_name],
-    },
-  });
+export const updateLastNote = (data: CardData, lastN: number) => {
+  const lastIds = getLastNoteId(lastN);
+  if (lastIds.length === 0) return;
+  for (let i = 0; i < lastIds.length; i++) {
+    const lastAudio = getLastAudio(lastIds[i], true);
+    data.Audio = lastAudio + data.Audio;
+    sendreq("updateNoteFields", {
+      note: {
+        id: lastIds[i],
+        fields: data,
+        tags: [config.tag_name],
+      },
+    });
+  }
+
   mp.osd_message("Updated last note");
 }
 
