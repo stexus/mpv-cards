@@ -2,6 +2,8 @@ import { CardData, addNote, updateLastNote } from './anki';
 import { screenshot, clipaudio }from './ffmpeg';
 import { TreeSet } from 'jstreemap';
 
+const SUB_THRESHOLD: number = 20; //in seconds
+
 interface Sub {
     ss: number, 
     to: number
@@ -74,13 +76,14 @@ export const nSubs = (num_words:number, num_subs: number, updateLast: boolean) =
     const start: number = curr_sub.ss;
     let end: number = start;
     for(let it = subs.find({ss: curr_sub.ss, to: curr_sub.to, text: curr_sub.text}); !it.equals(subs.end()) && num_subs > 0; num_subs--, it.next()) {
-      const temp: Sub = it.key as Sub;
-      sentence = `${sentence} ${temp.text.trim()}`;
-      //if next sub time is over 5 seconds away, don't add 
-      if (temp.to - end >= 5) break;
-      end = temp.to;
+      const nextSub: Sub = it.key as Sub;
+      sentence = `${sentence} ${nextSub.text.trim()}`;
+      //if next sub time is over SUB_THRESHOLD seconds away, don't add 
+      if (end !== start && nextSub.to - end >= SUB_THRESHOLD) break;
+      end = nextSub.to;
       mp.msg.warn(`sentence key: ${sentence}`);
     }
+    mp.msg.warn(`start: ${start}, end: ${end}`);
     if (isNaN(start) || isNaN(end)) {
       throw 'Invalid start and end times';
     }

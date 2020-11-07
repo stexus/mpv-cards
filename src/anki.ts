@@ -30,7 +30,7 @@ const sendreq = (action: string, params: {[key: string]: unknown}): unknown => {
     args: command
   })
 
-  //TODO: osd messages/better anki error catching and stuff
+  //TODO: better anki error catching and stuff
   if (raw.stdout) {
     mp.msg.warn('anki> ' + raw.stdout);
   } else {
