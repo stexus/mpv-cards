@@ -92,7 +92,7 @@ export const updateLastNote = (data: CardData, lastN: number) => {
     });
   }
 
-  mp.osd_message("Updated last note");
+  mp.osd_message(`Updated: ${lastIds.toString()}`);
 }
 
 export const addNote = (data: CardData) => {
@@ -104,6 +104,6 @@ export const addNote = (data: CardData) => {
       tags: [config.tag_name],
     }
   })
-  mp.osd_message("Added card");
+  mp.osd_message(`Added: ${data.Sentence}`);
   return;
 }

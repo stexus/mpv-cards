@@ -12,9 +12,9 @@ const getSubInfo = (): {ss: number, to: number, text: string} => {
     const ss = mp.get_property('sub-start') as string;
     const to = mp.get_property('sub-end') as string;
     return {
-      ss: adjusted(+ss),
-      to: adjusted(+to),
-      text,
+      ss: +ss,
+      to: +to,
+      text
     }
 }
 
@@ -73,7 +73,6 @@ export const nSubs = (num_words:number, num_subs: number, updateLast: boolean) =
     let sentence: string = '';
     const start: number = curr_sub.ss;
     let end: number = start;
-    //TODO: make sure ss, to are adjusted
     for(let it = subs.find({ss: curr_sub.ss, to: curr_sub.to, text: curr_sub.text}); !it.equals(subs.end()) && num_subs > 0; num_subs--, it.next()) {
       const temp: Sub = it.key as Sub;
       sentence = `${sentence} ${temp.text.trim()}`;
@@ -85,7 +84,7 @@ export const nSubs = (num_words:number, num_subs: number, updateLast: boolean) =
     if (isNaN(start) || isNaN(end)) {
       throw 'Invalid start and end times';
     }
-    exportHandler(start, end, sentence, updateLast, num_words);
+    exportHandler(adjusted(start), adjusted(end), sentence, updateLast, num_words);
 
   } catch(error) {
     mp.osd_message(error);
