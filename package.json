@@ -1,7 +1,7 @@
 {
   "name": "mpv-cards",
   "version": "1.0.0",
-  "description": "Mux of mpvacious and mpv-nihongo/LaT in TS with an attempt at adding a particular feature not yet fully decided yet.",
+  "description": "fast and flexible anki card creation in the mpv video player",
   "main": "index.js",
   "scripts": {
     "test": "jest",
@@ -12,15 +12,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stexus/betteranimecards.git"
+    "url": "git+https://github.com/stexus/mpv-cards.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/stexus/betteranimecards/issues"
+    "url": "https://github.com/stexus/mpv-cards/issues"
   },
-  "homepage": "https://github.com/stexus/betteranimecards#readme",
+  "homepage": "https://github.com/stexus/mpv-cards#readme",
   "devDependencies": {
     "@babel/core": "^7.12.3",
     "@babel/plugin-transform-modules-commonjs": "^7.12.1",
@@ -30,7 +30,6 @@
     "babel-loader": "^8.1.0",
     "jest": "^26.4.2",
     "node-mpv": "^2.0.0-beta.1",
-    "parcel-bundler": "^1.12.4",
     "ts-jest": "^26.4.0",
     "typescript": "^4.0.3",
     "webpack": "^5.1.3",
@@ -39,7 +38,6 @@
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
     "core-js": "^3.6.5",
-    "jstreemap": "^1.28.2",
-    "tstl": "^2.4.11"
+    "jstreemap": "^1.28.2"
   }
 }
