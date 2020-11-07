@@ -10,21 +10,20 @@ interface Sub {
     text: string
 }
 const getSubInfo = (): {ss: number, to: number, text: string} => {
-    const text: string = mp.get_property('sub-text') as string;
-    const ss = mp.get_property('sub-start') as string;
-    const to = mp.get_property('sub-end') as string;
+    const text: string = mp.get_property_native('sub-text') as string;
+    const ss: number = mp.get_property_native('sub-start') as number;
+    const to: number = mp.get_property_native('sub-end') as number;
     return {
-      ss: +ss,
-      to: +to,
+      ss,
+      to,
       text
     }
 }
 
 const adjusted = (timing: number): number => {
-  const delay = mp.get_property_native('sub-delay');
-  if (delay === undefined) return timing;
-  const new_timings: number = +delay + timing;
-  return new_timings
+  const delay: number = mp.get_property_native('sub-delay') as number;
+  if (isNaN(delay)) return timing;
+  return delay + timing;
 }
 
 //assigning params to an interface type seems to not be supported at the moment
@@ -35,6 +34,15 @@ subs.compareFunc = (x: any, y: any) => {
   } else if (x.to > y.to) {
     return 1;
   } return 0
+}
+
+const forcePush = (num_subs: number) => {
+  const curr_pos: string = mp.get_property('playback-time') as string;
+  mp.set_property_bool('pause', true);
+  for (let i = 0; i < num_subs; i++) {
+    mp.commandv('sub-seek', '1');
+  }
+  mp.commandv('seek', curr_pos, 'absolute');
 }
 
 const pushSubs = () => {
@@ -72,15 +80,15 @@ const exportHandler = (ss: number, to: number, sentence: string, updateLast: boo
 export const nSubs = (num_words:number, num_subs: number, updateLast: boolean) => {
   try {
     const curr_sub: {ss: number, to: number, text: string} = getSubInfo();
-    let sentence: string = '';
     const start: number = curr_sub.ss;
     let end: number = start;
-    for(let it = subs.find({ss: curr_sub.ss, to: curr_sub.to, text: curr_sub.text}); !it.equals(subs.end()) && num_subs > 0; num_subs--, it.next()) {
-      const nextSub: Sub = it.key as Sub;
-      sentence = `${sentence} ${nextSub.text.trim()}`;
+    let sentence: string = '';
+    for(let it = subs.find({curr_sub}); !it.equals(subs.end()) && num_subs > 0; num_subs--, it.next()){
+      const next_sub: Sub = it.key as Sub;
+      sentence = `${sentence} ${next_sub.text.trim()}`;
       //if next sub time is over SUB_THRESHOLD seconds away, don't add 
-      if (end !== start && nextSub.to - end >= SUB_THRESHOLD) break;
-      end = nextSub.to;
+      if (end !== start && next_sub.to - end >= SUB_THRESHOLD) break;
+      end = next_sub.to;
       mp.msg.warn(`sentence key: ${sentence}`);
     }
     mp.msg.warn(`start: ${start}, end: ${end}`);
