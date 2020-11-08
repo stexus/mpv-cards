@@ -22,7 +22,8 @@ const getSubInfo = (): {ss: number, to: number, text: string} => {
 
 const adjusted = (timing: number): number => {
   const delay: number = mp.get_property_native('sub-delay') as number;
-  if (isNaN(delay)) return timing;
+  mp.msg.warn(delay.toString());
+  if (delay === undefined || isNaN(delay)) return timing;
   return delay + timing;
 }
 
@@ -79,11 +80,11 @@ const exportHandler = (ss: number, to: number, sentence: string, updateLast: boo
 
 export const nSubs = (num_words:number, num_subs: number, updateLast: boolean) => {
   try {
-    const curr_sub: {ss: number, to: number, text: string} = getSubInfo();
-    const start: number = curr_sub.ss;
+    const {ss, to, text}  = getSubInfo();
+    const start: number = ss;
     let end: number = start;
     let sentence: string = '';
-    for(let it = subs.find({curr_sub}); !it.equals(subs.end()) && num_subs > 0; num_subs--, it.next()){
+    for(let it = subs.find({ss, to, text}); !it.equals(subs.end()) && num_subs > 0; num_subs--, it.next()){
       const next_sub: Sub = it.key as Sub;
       sentence = `${sentence} ${next_sub.text.trim()}`;
       //if next sub time is over SUB_THRESHOLD seconds away, don't add 
