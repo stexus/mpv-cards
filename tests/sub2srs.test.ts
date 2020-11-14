@@ -19,6 +19,9 @@ import {TreeSet} from 'jstreemap';
 //    player.quit();
 //    })
 //})
+
+
+
 const CompareSub = (sub_x: any, sub_y: any) => {
   if (sub_x.time > sub_y.time) {
     return 1
@@ -28,7 +31,7 @@ const CompareSub = (sub_x: any, sub_y: any) => {
   }
   return 0
 }
-describe('test treemap function', () => {
+describe('test treemap function sanity test', () => {
   const subs = new TreeSet();
   subs.compareFunc = CompareSub;
   it('correctly stores values', () => {
