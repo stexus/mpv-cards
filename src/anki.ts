@@ -31,9 +31,7 @@ const sendreq = (action: string, params: {[key: string]: unknown}): unknown => {
   })
 
   //TODO: better anki error catching and stuff
-  if (raw.stdout) {
-    mp.msg.warn('anki> ' + raw.stdout);
-  } else {
+  if (!raw.stdout) {
     mp.msg.warn('ANKI RESPONSE: ' + JSON.stringify(raw));
     if (raw.status === 7) {
       mp.msg.warn(`Couldn't connect to Anki.`);
@@ -45,14 +43,12 @@ const sendreq = (action: string, params: {[key: string]: unknown}): unknown => {
 }
 
 const getLastNoteId = (lastN: number) => {
-  mp.msg.warn("last note");
   //findNotes will always return either an emtpy array or array of numbers
   const res = sendreq("findNotes", { query: "added:1" }) as number[];
   return res.slice(res.length - lastN, res.length);
 }
 
 const getLastAudio = (id: number, updateLast: boolean) => {
-  mp.msg.warn("last audio note");
   if (!updateLast) {
     return "";
   }
@@ -72,9 +68,9 @@ const getLastAudio = (id: number, updateLast: boolean) => {
       mp.msg.warn('Field doesn\'t exist');
     }
   }
-
   return "";
 }
+
 export const updateLastNote = (data: CardData, lastN: number) => {
   const lastIds = getLastNoteId(lastN);
   if (lastIds.length === 0) return;

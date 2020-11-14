@@ -3,20 +3,22 @@ import { screenshot, clipaudio }from './ffmpeg';
 import { TreeSet } from 'jstreemap';
 
 const SUB_THRESHOLD: number = 20; //in seconds
-
+let currSID = mp.get_property_native('sid') as string;
 interface Sub {
-    ss: number, 
+    ss: number 
     to: number
     text: string
+    sid: string
 }
-const getSubInfo = (): {ss: number, to: number, text: string} => {
+const getSubInfo = (): Sub => {
     const text: string = mp.get_property_native('sub-text') as string;
     const ss: number = mp.get_property_native('sub-start') as number;
     const to: number = mp.get_property_native('sub-end') as number;
     return {
       ss,
       to,
-      text
+      text,
+      sid: currSID
     }
 }
 
@@ -45,16 +47,16 @@ const forcePush = (num_subs: number) => {
   }
   mp.commandv('seek', curr_pos, 'absolute');
 }
-
+const changeSID = () => {
+  currSID = mp.get_property('sid') as string;
+}
 const pushSubs = () => {
   const curr_sub = getSubInfo();
   if (isNaN(curr_sub.ss) || isNaN(curr_sub.to) || curr_sub === undefined) {
     return;
   }
   subs.add({
-    ss: curr_sub.ss,
-    to: curr_sub.to,
-    text: curr_sub.text
+    ...curr_sub
   });
   //mp.msg.warn(adjusted(+curr_sub.ss).toString());
   //mp.msg.warn(adjusted(+curr_sub.to).toString());
@@ -80,19 +82,24 @@ const exportHandler = (ss: number, to: number, sentence: string, updateLast: boo
 
 export const nSubs = (num_words:number, num_subs: number, updateLast: boolean) => {
   try {
-    const {ss, to, text}  = getSubInfo();
-    const start: number = ss;
+    const curr_sub = getSubInfo();
+    const start: number = curr_sub.ss;
     let end: number = start;
     let sentence: string = '';
-    for(let it = subs.find({ss, to, text}); !it.equals(subs.end()) && num_subs > 0; num_subs--, it.next()){
+    for(let it = subs.find({...curr_sub}); !it.equals(subs.end()) && num_subs > 0; num_subs--, it.next()){
       const next_sub: Sub = it.key as Sub;
+      //might consider creating separate tree references instead of sticking it all in one tree
+      if (next_sub.sid !== currSID) {
+        num_subs++;
+        continue;
+      }
       sentence = `${sentence} ${next_sub.text.trim()}`;
       //if next sub time is over SUB_THRESHOLD seconds away, don't add 
       if (end !== start && next_sub.to - end >= SUB_THRESHOLD) break;
       end = next_sub.to;
-      mp.msg.warn(`sentence key: ${sentence}`);
     }
     mp.msg.warn(`start: ${start}, end: ${end}`);
+    mp.msg.warn(`sentence: ${sentence}`);
     if (isNaN(start) || isNaN(end)) {
       throw 'Invalid start and end times';
     }
@@ -106,6 +113,7 @@ export const nSubs = (num_words:number, num_subs: number, updateLast: boolean) =
 
 
 mp.observe_property('sub-text', 'string', pushSubs);
+mp.observe_property('sid', 'string', changeSID);
 
 
 
