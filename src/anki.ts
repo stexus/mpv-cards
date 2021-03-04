@@ -100,6 +100,6 @@ export const addNote = (data: CardData) => {
       tags: [config.tag_name],
     }
   })
-  mp.osd_message(`Added: ${data.Sentence}`);
+  mp.osd_message(`Added: ${data.Sentence}`, 2);
   return;
 }

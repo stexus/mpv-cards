@@ -21,22 +21,22 @@
   },
   "homepage": "https://github.com/stexus/mpv-cards#readme",
   "devDependencies": {
-    "@babel/core": "^7.12.3",
-    "@babel/plugin-transform-modules-commonjs": "^7.12.1",
-    "@babel/preset-env": "^7.12.1",
-    "@babel/preset-typescript": "^7.10.4",
-    "@types/jest": "^26.0.14",
-    "babel-loader": "^8.1.0",
-    "jest": "^26.4.2",
+    "@babel/core": "^7.13.8",
+    "@babel/plugin-transform-modules-commonjs": "^7.13.8",
+    "@babel/preset-env": "^7.13.9",
+    "@babel/preset-typescript": "^7.13.0",
+    "@types/jest": "^26.0.20",
+    "babel-loader": "^8.2.2",
+    "core-js": "^2.6.12",
+    "jest": "^26.6.3",
     "node-mpv": "^2.0.0-beta.1",
-    "ts-jest": "^26.4.0",
-    "typescript": "^4.0.3",
-    "webpack": "^5.1.3",
-    "webpack-cli": "^4.0.0"
+    "ts-jest": "^26.5.3",
+    "typescript": "^4.2.2",
+    "webpack": "^5.24.3",
+    "webpack-cli": "^4.5.0"
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
-    "core-js": "^3.6.5",
     "jstreemap": "^1.28.2"
   }
 }
