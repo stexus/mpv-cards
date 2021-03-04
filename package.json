@@ -6,7 +6,6 @@
   "scripts": {
     "test": "jest",
     "build": "webpack",
-    "postinstall": "rm -rf ./.cache && node ./postinstall.js",
     "clean": "rm -rf dist",
     "dist": "bash ./install.sh"
   },
