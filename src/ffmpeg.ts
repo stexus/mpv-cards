@@ -73,7 +73,7 @@ export const clipaudio = (ss: number, to: number) => {
     "-map_metadata",
     "-1",
     "-map",
-    `0:${mp.get_property('aid')}`,
+    `0:${mp.get_property('aid')}?`,
     "-ac",
     "1",
     "-codec:a",
@@ -88,7 +88,7 @@ export const clipaudio = (ss: number, to: number) => {
     "18k",
     output,
   ];
-  //mp.msg.warn(command.toString());
+  mp.msg.warn(command.toString());
   mp.commandv(...command);
   return filename(output);
 }
