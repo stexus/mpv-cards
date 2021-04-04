@@ -70,39 +70,52 @@ describe('test treemap function sanity test', () => {
       ss: 929,
       to: 931,
       text: "雨…ですわ",
+      sid: 1
+    })
+    subs.add({
+      ss: 929,
+      to: 931,
+      text: "It's raining",
+      sid: 2
     })
     subs.add({
       ss: 931.7,
       to: 934,
       text: "また？ まったくダイヤは",
+      sid: 1
     })
     subs.add({
       ss: 934.2,
       to: 935,
       text: "待って わたくし？",
+      sid: 1
     })
     subs.add({
       ss: 935.8,
       to: 937,
       text: "雨女は鞠莉さんでしょ？",
+      sid: 1
     })
     subs.add({
       ss: 937.6,
       to: 939,
       text: "ホワイ？ 果南だよ～",
+      sid: 1
     })
     subs.add({
       ss: 940,
       to: 941,
       text: "訴えるよ？",
+      sid: 1
     })
     subs.add({
       ss: 950,
       to: 951,
       text: "do not add",
+      sid: 2
     })
-    //const curr_sub: string = "雨女は鞠莉さんでしょ？";
-    const curr_sub: string = "ホワイ？ 果南だよ～";
+    const curr_sub: string = "雨…ですわ";
+    //const curr_sub: string = "ホワイ？ 果南だよ～";
     //let it = subs.find({ss: 935.8, to: 937, text: curr_sub});
     //if (!it.equals(subs.end())) {
     //  const test: Sub = it.key as Sub;
@@ -110,6 +123,7 @@ describe('test treemap function sanity test', () => {
     //}
     for (let it = subs.begin(); !it.equals(subs.end()); it.next()) {
       const test: Sub = it.key as Sub;
+      console.log(test)
       console.log(`key: ${test.text}`);
     }
 
