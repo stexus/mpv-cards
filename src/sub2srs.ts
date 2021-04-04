@@ -10,6 +10,14 @@ interface Sub {
     text: string
     sid: string
 }
+const subs = new TreeSet();
+subs.compareFunc = (x: any, y: any) => {
+  if (x.to < y.to) {
+    return -1;
+  } else if (x.to > y.to) {
+    return 1;
+  } return 0
+}
 const getSubInfo = (): Sub => {
     const text: string = mp.get_property_native('sub-text') as string;
     const ss: number = mp.get_property_native('sub-start') as number;
@@ -29,27 +37,6 @@ const adjusted = (timing: number): number => {
   return delay + timing;
 }
 
-//assigning params to an interface type seems to not be supported at the moment
-const subs = new TreeSet();
-subs.compareFunc = (x: any, y: any) => {
-  if (x.to < y.to) {
-    return -1;
-  } else if (x.to > y.to) {
-    return 1;
-  } return 0
-}
-
-const forcePush = (num_subs: number) => {
-  const curr_pos: string = mp.get_property('playback-time') as string;
-  mp.set_property_bool('pause', true);
-  for (let i = 0; i < num_subs; i++) {
-    mp.commandv('sub-seek', '1');
-  }
-  mp.commandv('seek', curr_pos, 'absolute');
-}
-const changeSID = () => {
-  currSID = mp.get_property('sid') as string;
-}
 const pushSubs = () => {
   const curr_sub = getSubInfo();
   if (isNaN(curr_sub.ss) || isNaN(curr_sub.to) || curr_sub === undefined) {
@@ -113,7 +100,5 @@ export const nSubs = (num_words:number, num_subs: number, updateLast: boolean) =
 
 
 mp.observe_property('sub-text', 'string', pushSubs);
-mp.observe_property('sid', 'string', changeSID);
-
-
-
+mp.observe_property('sid', 'string', (_: any, sid: string) => currSID = sid);
+mp.register_event('file-loaded', () => subs.clear())
