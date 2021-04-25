@@ -20,11 +20,15 @@ export const user_config: config = {
   image_height: 520,
   image_delay_percent: 0.08,
   screenshot_quality: 70, 
+
+  //change below options up to "sentence_field" as necessary for your Anki configuration
   deck_name: 'Manual Mine',
   note_type: 'Audio Cards',
   tag_name: 'animecards',
-  //media_collection_dir: process.env.HOME + '/.local/share/Anki2/User 1/test',
+  //linux default
   media_collection_dir: process.env.HOME + '/.local/share/Anki2/User 1/collection.media',
+  //macos default
+  //media_collection_dir: process.env.HOME + '/Library/Application Support/Anki2/User 1/collection.media'
   audio_field: 'Audio',
   sentence_field: 'Sentence',
 }
