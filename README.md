@@ -10,8 +10,9 @@ mpv-cards allows you to automatically create and update Anki cards with minimal 
 ## Installation
 
 1. Install dependencies with `npm install`. Have [AnkiConnect](https://github.com/FooSoft/anki-connect) installed in Anki. This also requires `ffmpeg`.
-2. Build src files using `npm run build`
-3. Copy the distribution file into mpv script directory. Helper script `install.sh` is provided.
+2. Change options as necessary in `src/main.ts`
+3. Build src files using `npm run build`
+4. Copy the distribution file into mpv script directory. Helper script `install.sh` is provided (Run using `npm run dist`).
 
 ## Usage
 
