@@ -3,6 +3,7 @@ const webpack = require("webpack");
 
 module.exports = {
   // Change to your "entry-point".
+  mode: "production",
   entry: "./src/main",
   output: {
     path: path.resolve(__dirname, "dist"),
