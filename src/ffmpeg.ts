@@ -5,14 +5,14 @@ const filename = (absolute_path: string) => {
 }
 
 const mktemp = (extension: string) => {
-  const command = ['mktemp', `--suffix=.${extension}`, `${config.media_collection_dir}/sub2srs.XXXXXX`];
+  const command = ['mktemp', `-u`, `${config.media_collection_dir}/sub2srs.XXXXXX`];
   const raw = mp.command_native({
     name: 'subprocess',
     playback_only: false,
     capture_stdout: true,
     args: command
   })
-  return raw.stdout.trim();
+  return `${raw.stdout.trim()}.${extension}`;
 }
 
 export const screenshot = (ss: number, to: number) => {
