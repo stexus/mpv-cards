@@ -70,8 +70,15 @@ const getLastAudio = (id: number, updateLast: boolean) => {
   }
   return "";
 }
-
+const createUserCard = (data: CardData) => {
+  return {
+      [config.sentence_field]: data.Sentence,
+      [config.picture_field]: data.Picture,
+      [config.audio_field]: data.Audio,
+    }
+}
 export const updateLastNote = (data: CardData, lastN: number) => {
+  let userFields;
   const lastIds = getLastNoteId(lastN);
   if (lastIds.length === 0) return;
   const originalAudio = data.Audio;
@@ -79,10 +86,11 @@ export const updateLastNote = (data: CardData, lastN: number) => {
     const lastAudio = getLastAudio(lastIds[i], true);
     mp.msg.warn(lastIds[i].toString());
     data.Audio = lastAudio + originalAudio;
+    userFields = createUserCard(data);
     sendreq("updateNoteFields", {
       note: {
         id: lastIds[i],
-        fields: data,
+        fields: userFields,
         tags: [config.tag_name],
       },
     });
@@ -92,11 +100,12 @@ export const updateLastNote = (data: CardData, lastN: number) => {
 }
 
 export const addNote = (data: CardData) => {
+  const userFields = createUserCard(data)
   sendreq('addNote', {
     note: {
       deckName: config.deck_name,
       modelName: config.note_type,
-      fields: data,
+      fields: userFields,
       tags: [config.tag_name],
     }
   })

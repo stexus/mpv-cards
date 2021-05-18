@@ -10,27 +10,35 @@ interface config {
   note_type: string,
   tag_name: string ,
   media_collection_dir: string,
-  audio_field: string,
   sentence_field: string,
+  picture_field: string,
+  audio_field: string,
 }
 
 export const user_config: config = {
   audio_threshold: 0.25,
   image_width: -2,
-  image_height: 520,
+  image_height: 300,
   image_delay_percent: 0.08,
   screenshot_quality: 70, 
-
-  //change below options up to "sentence_field" as necessary for your Anki configuration
+  //these do not matter as much unless using the "flexible" feature, which is not recommended
   deck_name: 'Manual Mine',
   note_type: 'Audio Cards',
   tag_name: 'animecards',
+
+
+  /*the below options must be changed to match user Anki settings 
+  (i.e the field you want the sentence to go to should be in sentence_field) */
   //linux default
   media_collection_dir: process.env.HOME + '/.local/share/Anki2/User 1/collection.media',
   //macos default
   //media_collection_dir: process.env.HOME + '/Library/Application Support/Anki2/User 1/collection.media'
-  audio_field: 'Audio',
+  
+  //change below options up to "sentence_field" as necessary for your Anki configuration
   sentence_field: 'Sentence',
+  picture_field: 'Picture',
+  audio_field: 'Audio',
+
 }
 //const curl: string = 'curl';
 //todo: utility functions
