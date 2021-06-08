@@ -94,6 +94,7 @@ export const nSubs = (num_words:number, num_subs: number, updateLast: boolean) =
 
   } catch(error) {
     mp.osd_message(error);
+    mp.msg.warn(`Error ${error}`);
     mp.msg.warn('No subs available');
   }
 }

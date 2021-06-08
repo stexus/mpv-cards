@@ -19,8 +19,8 @@ interface Fields {
 }
 
 const sendreq = (action: string, params: {[key: string]: unknown}): unknown => { 
-  const address = '127.0.0.1:8765';
-  const request = JSON.stringify({action, version: ANKICONNECT_VER, params})
+  const address: string = '127.0.0.1:8765';
+  const request: string = JSON.stringify({action, version: ANKICONNECT_VER, params})
   mp.msg.warn(request);
   const command = [ 'curl', '-s', address, '-X', 'POST', '-d', request]
   const raw = mp.command_native({
@@ -84,7 +84,7 @@ export const updateLastNote = (data: CardData, lastN: number) => {
   const originalAudio = data.Audio;
   for (let i = 0; i < lastIds.length; i++) {
     const lastAudio = getLastAudio(lastIds[i], true);
-    mp.msg.warn(lastIds[i].toString());
+    mp.msg.warn(`last id: ${lastIds[i].toString()}`);
     data.Audio = lastAudio + originalAudio;
     userFields = createUserCard(data);
     sendreq("updateNoteFields", {
@@ -96,7 +96,7 @@ export const updateLastNote = (data: CardData, lastN: number) => {
     });
   }
 
-  mp.osd_message(`Updated: ${lastIds.toString()}`);
+  mp.osd_message(`Updated ${lastN} notes`);
 }
 
 export const addNote = (data: CardData) => {

@@ -1,10 +1,10 @@
 import {user_config as config} from './main'
 
-const filename = (absolute_path: string) => {
-  return absolute_path.replace(/^.*[\\\/]/, '');
+const filename = (absolute_path: string): string =>  {
+  return absolute_path.split('\\').pop().split('/').pop();
 }
 
-const mktemp = (extension: string) => {
+const mktemp = (extension: string): string => {
   const command = ['mktemp', `-u`, `${config.media_collection_dir}/sub2srs.XXXXXX`];
   const raw = mp.command_native({
     name: 'subprocess',
@@ -15,10 +15,10 @@ const mktemp = (extension: string) => {
   return `${raw.stdout.trim()}.${extension}`;
 }
 
-export const screenshot = (ss: number, to: number) => {
-  const output = mktemp('webp');
+export const screenshot = (ss: number, to: number): string => {
+  const output: string = mktemp('webp');
   ss = (ss + to) / 2;
-  const path = mp.get_property('path');
+  const path: string = mp.get_property('path') as string;
   var command = [
     "run",
     "ffmpeg",
@@ -50,11 +50,12 @@ export const screenshot = (ss: number, to: number) => {
   //mp.msg.warn(command.toString());
   return filename(output);
 }
-export const clipaudio = (ss: number, to: number) => {
-  const output = mktemp('ogg');
+export const clipaudio = (ss: number, to: number): string => {
+  const output: string = mktemp('ogg');
   ss = ss - config.audio_threshold;
   to = to + config.audio_threshold;
-  const path = mp.get_property('path');
+  const aid: string = mp.get_property('aid') as string;
+  const path: string = mp.get_property('path') as string;
   var command = [
     "run",
     "ffmpeg",
@@ -73,7 +74,7 @@ export const clipaudio = (ss: number, to: number) => {
     "-map_metadata",
     "-1",
     "-map",
-    `0:${mp.get_property('aid')}?`,
+    `0:${aid}?`,
     "-ac",
     "1",
     "-codec:a",
@@ -88,7 +89,7 @@ export const clipaudio = (ss: number, to: number) => {
     "18k",
     output,
   ];
-  mp.msg.warn(command.toString());
+  //mp.msg.warn(command.toString());
   mp.commandv(...command);
   return filename(output);
 }
